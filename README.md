@@ -2,6 +2,8 @@
 
 Proyek ini adalah aplikasi **GUI untuk mencari rute terpendek menuju bengkel**, menggunakan **algoritma Dijkstra** dengan menerapkan clean architecture.
 
+reference algorithm from https://www.baeldung.com/java-dijkstra
+
 # Struktur Project
 
 ```
@@ -26,4 +28,3 @@ Proyek ini adalah aplikasi **GUI untuk mencari rute terpendek menuju bengkel**, 
 ```
 
 requirement: jdk 17 + jgraphx 3.9.3
-reference algorithm from https://www.baeldung.com/java-dijkstra
