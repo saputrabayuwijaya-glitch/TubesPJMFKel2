@@ -19,11 +19,11 @@ public class AppWindow extends JFrame {
     private GraphManager gm = new GraphManager();
 
     public AppWindow() {
-        super("Graph + Dijkstra + JGraphX");
+        super("Pencarian Rute Terpendek Menuju Bengkel");
 
-        JButton btnAddNode = new JButton("Add Node");
-        JButton btnAddEdge = new JButton("Add Edge");
-        JButton btnFindPath = new JButton("Find Shortest Path");
+        JButton btnAddNode = new JButton("Tambah Titik Lokasi");
+        JButton btnAddEdge = new JButton("Tambah Rute");
+        JButton btnFindPath = new JButton("Cari Rute Terpendek");
 
         btnAddNode.addActionListener(e -> addNode());
         btnAddEdge.addActionListener(e -> addEdge());
@@ -43,26 +43,26 @@ public class AppWindow extends JFrame {
     }
 
     private void addNode() {
-        String name = JOptionPane.showInputDialog("Node:");
+        String name = JOptionPane.showInputDialog("Titik Lokasi:");
         if (name != null && !name.isEmpty()) {
             gm.addNode(name);
         }
     }
 
     private void addEdge() {
-        String from = JOptionPane.showInputDialog("From:");
-        String to = JOptionPane.showInputDialog("To:");
-        int w = Integer.parseInt(JOptionPane.showInputDialog("Weight:"));
+        String from = JOptionPane.showInputDialog("Dari:");
+        String to = JOptionPane.showInputDialog("Menuju:");
+        int w = Integer.parseInt(JOptionPane.showInputDialog("Panjang km:"));
         gm.addEdge(from, to, w);
     }
 
     private void findPath() {
-        String start = JOptionPane.showInputDialog("Start:");
-        String end = JOptionPane.showInputDialog("End:");
+        String start = JOptionPane.showInputDialog("Mulai dari:");
+        String end = JOptionPane.showInputDialog("Menuju:");
 
         List<String> path = Dijkstra.run(gm.adj, start, end);
         if (path == null) {
-            JOptionPane.showMessageDialog(this, "Path tidak ditemukan!");
+            JOptionPane.showMessageDialog(this, "Rute tidak ditemukan!");
             return;
         }
 
