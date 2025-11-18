@@ -60,12 +60,30 @@ public class AppWindow extends JFrame {
         String start = JOptionPane.showInputDialog("Mulai dari:");
         String end = JOptionPane.showInputDialog("Menuju:");
 
-        List<String> path = Dijkstra.run(gm.adj, start, end);
-        if (path == null) {
+        Dijkstra.Result result = Dijkstra.runWithDistance(gm.adj, start, end);
+
+        if (result == null || result.path == null) {
             JOptionPane.showMessageDialog(this, "Rute tidak ditemukan!");
             return;
         }
 
-        PathHighlighter.highlight(gm.graph, gm.parent, gm, path);
+        PathHighlighter.highlight(gm.graph, gm.parent, gm, result.path);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Rute Terpendek\n");
+        sb.append("Dari: ").append(start).append("\n");
+        sb.append("Ke:   ").append(end).append("\n\n");
+        sb.append("Urutan Rute:\n");
+
+        for (int i = 0; i < result.path.size(); i++) {
+            sb.append(result.path.get(i));
+            if (i < result.path.size() - 1)
+                sb.append(" → ");
+        }
+
+        sb.append("\n\nTotal Jarak: ").append(result.distance).append(" km");
+
+        JOptionPane.showMessageDialog(this, sb.toString());
     }
+
 }

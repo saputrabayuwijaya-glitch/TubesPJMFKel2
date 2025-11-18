@@ -10,4 +10,5 @@ public class GraphPanel extends JPanel {
         setLayout(new java.awt.BorderLayout());
         add(new mxGraphComponent(gm.graph), java.awt.BorderLayout.CENTER);
     }
+
 }
