@@ -11,4 +11,4 @@
     │       └── PathHighlighter.java
     └── Main.java
 ```
-java 17 + jgrapx 3.9.3
+jdk 17 + jgraphx 3.9.3
