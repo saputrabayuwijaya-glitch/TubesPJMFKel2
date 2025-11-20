@@ -29,11 +29,6 @@ requirement: jdk 17 + jgraphx 3.9.3
 
 # task
 
-validasi
-
-1. tambah jarak antar titiknya 1". jangan ditampung
-2. cari rute terpendeknya 1". jangan ditampung
-
 ui
 
 1. tambah maps sebagai background
