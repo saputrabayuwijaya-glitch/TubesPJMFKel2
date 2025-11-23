@@ -19,7 +19,7 @@ import java.util.*;
 public class Vertex {
 
     /** Nama atau label unik dari vertex */
-    private final String name;
+    private final String vertexName;
 
     /** Daftar vertex yang menyusun jalur terpendek menuju vertex ini */
     private List<Vertex> shortestPath = new LinkedList<>();
@@ -27,16 +27,15 @@ public class Vertex {
     /** Jarak dari vertex sumber. Default = tak hingga */
     private Integer distance = Integer.MAX_VALUE;
 
-
     private List<Edge> edges = new ArrayList<>();
 
     /**
      * Membuat instance vertex baru dengan nama tertentu.
      *
-     * @param name nama unik vertex
+     * @param vertexName nama unik vertex
      */
-    public Vertex(String name) {
-        this.name = name;
+    public Vertex(String vertexName) {
+        this.vertexName = vertexName;
     }
 
     public void addEdge(Vertex destination, int weight) {
@@ -47,9 +46,8 @@ public class Vertex {
         return edges;
     }
 
-
-    public String getName() {
-        return name;
+    public String getVertexName() {
+        return vertexName;
     }
 
     public List<Vertex> getShortestPath() {

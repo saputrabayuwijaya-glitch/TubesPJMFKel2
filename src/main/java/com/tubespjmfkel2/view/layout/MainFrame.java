@@ -88,9 +88,9 @@ public class MainFrame extends JFrame {
      * Jika input valid, vertex ditambahkan ke model dan tampilan diperbarui.
      */
     private void addVertex() {
-        String name = JOptionPane.showInputDialog("Nama Titik Tempat:");
+        String vertexName = JOptionPane.showInputDialog("Nama Titik Tempat:");
 
-        String error = graphController.addVertex(name);
+        String error = graphController.addVertex(vertexName);
 
         if (error != null)
             JOptionPane.showMessageDialog(this, error);

@@ -79,17 +79,17 @@ public class GraphController {
      * </ol>
      * </p>
      *
-     * @param name nama vertex baru yang ingin ditambahkan
+     * @param vertexName nama vertex baru yang ingin ditambahkan
      * @return pesan error jika gagal, atau {@code null} jika berhasil
      */
-    public String addVertex(String name) {
-        if (name == null || name.trim().isEmpty())
+    public String addVertex(String vertexName) {
+        if (vertexName == null || vertexName.trim().isEmpty())
             return "Nama Titik Tempat tidak boleh kosong!";
 
-        if (findVertexModel(name) != null)
-            return "Titik Tempat '" + name + "' sudah ada!";
+        if (findVertexModel(vertexName) != null)
+            return "Titik Tempat '" + vertexName + "' sudah ada!";
 
-        Vertex vertex = new Vertex(name);
+        Vertex vertex = new Vertex(vertexName);
         coreGraph.addVertex(vertex);
 
         uiGraph.getModel().beginUpdate();
@@ -97,7 +97,7 @@ public class GraphController {
             uiGraph.insertVertex(
                     uiGraph.getDefaultParent(),
                     null,
-                    name,
+                    vertexName,
                     50, 50,
                     60, 60,
                     "shape=ellipse");
@@ -122,8 +122,8 @@ public class GraphController {
      * <li>Menyimpan referensi edge untuk pengolahan berikutnya</li>
      * </ol>
      *
-     * @param from   nama vertex asal
-     * @param to     nama vertex tujuan
+     * @param from      nama vertex asal
+     * @param to        nama vertex tujuan
      * @param weightStr bobot edge (> 0)
      * @return pesan error jika gagal, atau {@code null} jika berhasil
      */
@@ -181,13 +181,13 @@ public class GraphController {
     /**
      * Mencari objek Vertex pada model Graph berdasarkan nama.
      *
-     * @param name nama vertex
+     * @param vertexName nama vertex
      * @return objek {@link Vertex} jika ditemukan, atau {@code null} jika tidak ada
      */
-    public Vertex findVertexModel(String name) {
+    public Vertex findVertexModel(String vertexName) {
         return coreGraph.getVertices()
                 .stream()
-                .filter(v -> v.getName().equals(name))
+                .filter(v -> v.getVertexName().equals(vertexName))
                 .findFirst()
                 .orElse(null);
     }
@@ -195,12 +195,12 @@ public class GraphController {
     /**
      * Mencari objek vertex di UI (mxGraph) berdasarkan label nama vertex.
      *
-     * @param name nama vertex yang dicari
+     * @param vertexName nama vertex yang dicari
      * @return objek vertex representasi di UI, atau {@code null} jika tidak ada
      */
-    private Object findVertexUI(String name) {
+    private Object findVertexUI(String vertexName) {
         for (Object cell : uiGraph.getChildVertices(uiGraph.getDefaultParent())) {
-            if (name.equals(uiGraph.getLabel(cell)))
+            if (vertexName.equals(uiGraph.getLabel(cell)))
                 return cell;
         }
         return null;

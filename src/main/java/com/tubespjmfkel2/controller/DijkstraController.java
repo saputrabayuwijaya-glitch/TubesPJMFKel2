@@ -84,7 +84,7 @@ public class DijkstraController {
         // Bentuk path
         List<String> path = new ArrayList<>();
         for (Vertex v : endVertex.getShortestPath())
-            path.add(v.getName());
+            path.add(v.getVertexName());
 
         if (!path.contains(end))
             path.add(end);
