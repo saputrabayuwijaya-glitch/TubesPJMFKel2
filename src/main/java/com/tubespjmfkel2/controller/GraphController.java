@@ -38,6 +38,9 @@ public class GraphController {
     /** Penyimpanan referensi edge UI berdasarkan pasangan vertex 'A->B'. */
     private Map<String, Object> edgeMap = new HashMap<>();
 
+    /** Mapping vertex UI: "A" → UI Vertex Object */
+    private Map<String, Object> vertexUIMap = new HashMap<>();
+
     /**
      * Mengambil objek graph inti yang digunakan algoritma.
      *
@@ -67,6 +70,30 @@ public class GraphController {
     }
 
     /**
+     * Mencari objek Vertex pada model Graph berdasarkan nama.
+     *
+     * @param inputVertex nama vertex
+     * @return objek {@link Vertex} jika ditemukan, atau {@code null} jika tidak ada
+     */
+    public Vertex findVertexModel(String inputVertex) {
+        return coreGraph.getVertices()
+                .stream()
+                .filter(v -> v.getVertex().equals(inputVertex))
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
+     * Mencari objek vertex di UI (mxGraph) berdasarkan label nama vertex.
+     *
+     * @param inputVertex nama vertex yang dicari
+     * @return objek vertex representasi di UI, atau {@code null} jika tidak ada
+     */
+    private Object findVertexUI(String inputVertex) {
+        return vertexUIMap.get(inputVertex);
+    }
+
+    /**
      * Menambahkan sebuah vertex baru ke struktur graph dan tampilan UI.
      *
      * <p>
@@ -79,17 +106,17 @@ public class GraphController {
      * </ol>
      * </p>
      *
-     * @param vertexName nama vertex baru yang ingin ditambahkan
+     * @param inputVertex nama vertex baru yang ingin ditambahkan
      * @return pesan error jika gagal, atau {@code null} jika berhasil
      */
-    public String addVertex(String vertexName) {
-        if (vertexName == null || vertexName.trim().isEmpty())
+    public String addVertex(String inputVertex) {
+        if (inputVertex == null || inputVertex.trim().isEmpty())
             return "Nama Titik Tempat tidak boleh kosong!";
 
-        if (findVertexModel(vertexName) != null)
-            return "Titik Tempat '" + vertexName + "' sudah ada!";
+        if (findVertexModel(inputVertex) != null)
+            return "Titik Tempat '" + inputVertex + "' sudah ada!";
 
-        Vertex vertex = new Vertex(vertexName);
+        Vertex vertex = new Vertex(inputVertex);
         coreGraph.addVertex(vertex);
 
         uiGraph.getModel().beginUpdate();
@@ -97,7 +124,7 @@ public class GraphController {
             uiGraph.insertVertex(
                     uiGraph.getDefaultParent(),
                     null,
-                    vertexName,
+                    inputVertex,
                     50, 50,
                     60, 60,
                     "shape=ellipse");
@@ -122,36 +149,36 @@ public class GraphController {
      * <li>Menyimpan referensi edge untuk pengolahan berikutnya</li>
      * </ol>
      *
-     * @param from      nama vertex asal
-     * @param to        nama vertex tujuan
-     * @param weightStr bobot edge (> 0)
+     * @param inputFrom   nama vertex asal
+     * @param inputTo     nama vertex tujuan
+     * @param inputWeight bobot edge (> 0)
      * @return pesan error jika gagal, atau {@code null} jika berhasil
      */
-    public String addEdge(String from, String to, String weightStr) {
+    public String addEdge(String inputFrom, String inputTo, String inputWeight) {
 
-        if (from == null || to == null || weightStr == null)
+        if (inputFrom == null || inputTo == null || inputWeight == null)
             return "Input tidak boleh kosong!";
 
         // cek validasi angka
         int weight;
         try {
-            weight = Integer.parseInt(weightStr);
+            weight = Integer.parseInt(inputWeight);
         } catch (NumberFormatException e) {
             return "Bobot harus angka!";
         }
 
-        Vertex vFrom = findVertexModel(from);
-        Vertex vTo = findVertexModel(to);
+        Vertex vFrom = findVertexModel(inputFrom);
+        Vertex vTo = findVertexModel(inputTo);
 
         if (vFrom == null)
             return "Titik Tempat asal tidak ditemukan!";
         if (vTo == null)
             return "Titik Tempat tujuan tidak ditemukan!";
-        if (from.equals(to))
+        if (inputFrom.equals(inputTo))
             return "Titik Tempat tidak boleh menuju dirinya sendiri!";
         if (weight <= 0)
             return "Bobot harus lebih besar dari 0!";
-        if (edgeMap.containsKey(from + "->" + to))
+        if (edgeMap.containsKey(inputFrom + "->" + inputTo))
             return "Rute ini sudah ada!";
 
         // tambah edge pada graph baru
@@ -160,49 +187,21 @@ public class GraphController {
         // ADD KE UI
         uiGraph.getModel().beginUpdate();
         try {
-            Object uiFrom = findVertexUI(from);
-            Object uiTo = findVertexUI(to);
+            Object uiFrom = findVertexUI(inputFrom);
+            Object uiTo = findVertexUI(inputTo);
 
-            Object edge = uiGraph.insertEdge(
+            Object uiEdge = uiGraph.insertEdge(
                     uiGraph.getDefaultParent(),
                     null,
                     weight,
                     uiFrom,
                     uiTo);
 
-            edgeMap.put(from + "->" + to, edge);
+            edgeMap.put(inputFrom + "->" + inputTo, uiEdge);
         } finally {
             uiGraph.getModel().endUpdate();
         }
 
-        return null;
-    }
-
-    /**
-     * Mencari objek Vertex pada model Graph berdasarkan nama.
-     *
-     * @param vertexName nama vertex
-     * @return objek {@link Vertex} jika ditemukan, atau {@code null} jika tidak ada
-     */
-    public Vertex findVertexModel(String vertexName) {
-        return coreGraph.getVertices()
-                .stream()
-                .filter(v -> v.getVertexName().equals(vertexName))
-                .findFirst()
-                .orElse(null);
-    }
-
-    /**
-     * Mencari objek vertex di UI (mxGraph) berdasarkan label nama vertex.
-     *
-     * @param vertexName nama vertex yang dicari
-     * @return objek vertex representasi di UI, atau {@code null} jika tidak ada
-     */
-    private Object findVertexUI(String vertexName) {
-        for (Object cell : uiGraph.getChildVertices(uiGraph.getDefaultParent())) {
-            if (vertexName.equals(uiGraph.getLabel(cell)))
-                return cell;
-        }
         return null;
     }
 
@@ -219,18 +218,16 @@ public class GraphController {
      * </p>
      */
     public void resetGraph() {
-        coreGraph = new Graph();
+        coreGraph = new Graph(); // reset struktur algoritmik
         edgeMap.clear();
+        vertexUIMap.clear();
 
         uiGraph.getModel().beginUpdate();
         try {
-            Object[] cells = uiGraph.getChildCells(
-                    uiGraph.getDefaultParent(),
-                    true,
+            // Hapus semua vertex & edge di UI
+            uiGraph.removeCells(
+                    uiGraph.getChildCells(uiGraph.getDefaultParent(), true, true),
                     true);
-
-            if (cells != null && cells.length > 0)
-                uiGraph.removeCells(cells);
         } finally {
             uiGraph.getModel().endUpdate();
         }

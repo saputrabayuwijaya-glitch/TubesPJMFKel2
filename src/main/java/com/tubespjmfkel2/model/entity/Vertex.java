@@ -1,6 +1,8 @@
 package com.tubespjmfkel2.model.entity;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Representasi dari sebuah simpul (vertex) dalam graph.
@@ -19,7 +21,7 @@ import java.util.*;
 public class Vertex {
 
     /** Nama atau label unik dari vertex */
-    private final String vertexName;
+    private final String vertex;
 
     /** Daftar vertex yang menyusun jalur terpendek menuju vertex ini */
     private List<Vertex> shortestPath = new LinkedList<>();
@@ -32,10 +34,10 @@ public class Vertex {
     /**
      * Membuat instance vertex baru dengan nama tertentu.
      *
-     * @param vertexName nama unik vertex
+     * @param vertex nama unik vertex
      */
-    public Vertex(String vertexName) {
-        this.vertexName = vertexName;
+    public Vertex(String vertex) {
+        this.vertex = vertex;
     }
 
     public void addEdge(Vertex destination, int weight) {
@@ -46,8 +48,8 @@ public class Vertex {
         return edges;
     }
 
-    public String getVertexName() {
-        return vertexName;
+    public String getVertex() {
+        return vertex;
     }
 
     public List<Vertex> getShortestPath() {

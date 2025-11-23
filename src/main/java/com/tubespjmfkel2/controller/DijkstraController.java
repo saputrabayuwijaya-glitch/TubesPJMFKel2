@@ -49,25 +49,22 @@ public class DijkstraController {
      * </ol>
      * </p>
      *
-     * @param start nama vertex awal
-     * @param end   nama vertex tujuan
+     * @param inputStartVertex nama vertex awal
+     * @param inputEndVertex   nama vertex tujuan
      * @return objek {@link DijkstraResult} berisi path dan total jarak,
      *         atau <code>null</code> jika vertex tidak valid atau tidak ada jalur.
      */
-    public DijkstraResult runDijkstra(String start, String end) {
+    public DijkstraResult runDijkstra(String inputStartVertex, String inputEndVertex) {
 
-        if (start == null || end == null)
-            return null;
-
-        Vertex startVertex = graphController.findVertexModel(start);
-        Vertex endVertex = graphController.findVertexModel(end);
+        Vertex startVertex = graphController.findVertexModel(inputStartVertex);
+        Vertex endVertex = graphController.findVertexModel(inputEndVertex);
 
         if (startVertex == null || endVertex == null)
             return null;
 
         // Kasus start == end
-        if (start.equals(end))
-            return new DijkstraResult(Arrays.asList(start), 0);
+        if (inputStartVertex.equals(inputEndVertex))
+            return new DijkstraResult(Arrays.asList(inputStartVertex), 0);
 
         // Reset dahulu semua vertex
         graphController.getCoreGraph().resetAllVertices();
@@ -77,17 +74,13 @@ public class DijkstraController {
                 graphController.getCoreGraph(),
                 startVertex);
 
-        // Jika unreachable
-        if (endVertex.getDistance() == Integer.MAX_VALUE)
-            return null;
-
         // Bentuk path
         List<String> path = new ArrayList<>();
         for (Vertex v : endVertex.getShortestPath())
-            path.add(v.getVertexName());
+            path.add(v.getVertex());
 
-        if (!path.contains(end))
-            path.add(end);
+        if (!path.contains(inputEndVertex))
+            path.add(inputEndVertex);
 
         return new DijkstraResult(path, endVertex.getDistance());
     }

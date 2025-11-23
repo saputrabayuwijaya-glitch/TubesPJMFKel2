@@ -1,4 +1,4 @@
-package com.tubespjmfkel2.view.layout;
+package com.tubespjmfkel2.view;
 
 import java.awt.BorderLayout;
 import java.util.List;
@@ -8,11 +8,10 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import com.mxgraph.view.mxGraph;
 import com.tubespjmfkel2.controller.DijkstraController;
 import com.tubespjmfkel2.controller.GraphController;
 import com.tubespjmfkel2.dto.DijkstraResult;
-import com.tubespjmfkel2.view.component.GraphPanel;
-import com.tubespjmfkel2.view.util.PathHighlighter;
 
 /**
  * Kelas utama antarmuka grafis (GUI) aplikasi pencarian rute terpendek
@@ -32,7 +31,7 @@ import com.tubespjmfkel2.view.util.PathHighlighter;
  * visualisasi graph.
  * </p>
  */
-public class MainFrame extends JFrame {
+public class GraphFrame extends JFrame {
 
     /** Controller yang menangani operasi graph model dan UI graph. */
     private final GraphController graphController = new GraphController();
@@ -46,7 +45,7 @@ public class MainFrame extends JFrame {
     /**
      * Konstruktor utama yang menginisialisasi jendela, tombol menu, dan panel graf.
      */
-    public MainFrame() {
+    public GraphFrame() {
         super("Pencarian Rute Terpendek Menuju Bengkel");
 
         // Tombol - tombol aksi
@@ -88,9 +87,9 @@ public class MainFrame extends JFrame {
      * Jika input valid, vertex ditambahkan ke model dan tampilan diperbarui.
      */
     private void addVertex() {
-        String vertexName = JOptionPane.showInputDialog("Nama Titik Tempat:");
+        String inputVertex = JOptionPane.showInputDialog("Nama Titik Tempat:");
 
-        String error = graphController.addVertex(vertexName);
+        String error = graphController.addVertex(inputVertex);
 
         if (error != null)
             JOptionPane.showMessageDialog(this, error);
@@ -107,11 +106,11 @@ public class MainFrame extends JFrame {
      * Menggunakan dialog untuk menerima input asal, tujuan, dan bobot.
      */
     private void addEdge() {
-        String from = JOptionPane.showInputDialog("Dari Titik Tempat:");
-        String to = JOptionPane.showInputDialog("Menuju Titik Tempat:");
-        String w = JOptionPane.showInputDialog("Jarak (km):");
+        String inputFrom = JOptionPane.showInputDialog("Dari Titik Tempat:");
+        String InputTo = JOptionPane.showInputDialog("Menuju Titik Tempat:");
+        String inputWeight = JOptionPane.showInputDialog("Jarak (km):");
 
-        String error = graphController.addEdge(from, to, w);
+        String error = graphController.addEdge(inputFrom, InputTo, inputWeight);
 
         if (error != null)
             JOptionPane.showMessageDialog(this, error);
@@ -139,10 +138,10 @@ public class MainFrame extends JFrame {
      */
     private void findPath() {
 
-        String start = JOptionPane.showInputDialog("Dari Titik Tempat:");
-        String end = JOptionPane.showInputDialog("Menuju Titik Tempat:");
+        String inputStartVertex = JOptionPane.showInputDialog("Dari Titik Tempat:");
+        String inputEndVertex = JOptionPane.showInputDialog("Menuju Titik Tempat:");
 
-        DijkstraResult result = dijkstraController.runDijkstra(start, end);
+        DijkstraResult result = dijkstraController.runDijkstra(inputStartVertex, inputEndVertex);
 
         if (result == null) {
             JOptionPane.showMessageDialog(this, "Rute tidak ditemukan!");
@@ -152,15 +151,12 @@ public class MainFrame extends JFrame {
         List<String> path = result.getPath();
         int distance = result.getDistance();
 
-        PathHighlighter.highlight(
-                graphController.getUiGraph(),
-                graphController,
-                path);
-
+        // 🔥 Panggil internal highlight (sudah digabung)
+        highlightPath(graphController.getUiGraph(), graphController, path);
         StringBuilder sb = new StringBuilder();
         sb.append("Rute Terpendek\n")
-                .append("Dari: ").append(start).append("\n")
-                .append("Menuju: ").append(end).append("\n")
+                .append("Dari: ").append(inputStartVertex).append("\n")
+                .append("Menuju: ").append(inputEndVertex).append("\n")
                 .append("Total Jarak: ").append(distance).append(" km\n\n")
                 .append("Urutan Titik:\n");
 
@@ -191,6 +187,54 @@ public class MainFrame extends JFrame {
         if (confirm == JOptionPane.YES_OPTION) {
             graphController.resetGraph();
             graphPanel.refresh();
+        }
+    }
+
+    /**
+     * Menyorot jalur tertentu pada graph.
+     *
+     * <p>
+     * Semua edge akan dikembalikan ke style default (hitam) terlebih dahulu,
+     * kemudian edge pada jalur yang diberikan akan diwarnai hijau dan ditebalkan.
+     * </p>
+     *
+     * @param graph           Graph yang akan dimodifikasi ({@link mxGraph}).
+     * @param graphController Controller yang menyediakan mapping edge dan kontrol
+     *                        graph.
+     * @param path            Daftar nama vertex yang membentuk jalur yang akan
+     *                        disorot.
+     */
+    public static void highlightPath(mxGraph graph, GraphController graphController, List<String> path) {
+        graph.getModel().beginUpdate();
+        try {
+            // Reset semua edge ke style default
+            graphController.getEdgeMap().forEach((k, e) -> {
+                graph.setCellStyle("strokeColor=black;strokeWidth=1", new Object[] { e });
+            });
+
+            // Sorot edge pada jalur
+            for (int i = 0; i < path.size() - 1; i++) {
+                colorEdge(graph, graphController, path.get(i), path.get(i + 1));
+                colorEdge(graph, graphController, path.get(i + 1), path.get(i)); // jika graph bidirectional
+            }
+
+        } finally {
+            graph.getModel().endUpdate();
+        }
+    }
+
+    /**
+     * Memberi warna hijau dan menebalkan edge tertentu.
+     *
+     * @param graph           Graph yang dimodifikasi.
+     * @param graphController Controller yang menyediakan mapping edge.
+     * @param from            Nama vertex awal edge.
+     * @param to              Nama vertex akhir edge.
+     */
+    private static void colorEdge(mxGraph graph, GraphController graphController, String from, String to) {
+        Object e = graphController.getEdgeMap().get(from + "->" + to);
+        if (e != null) {
+            graph.setCellStyle("strokeColor=green;strokeWidth=3", new Object[] { e });
         }
     }
 }
