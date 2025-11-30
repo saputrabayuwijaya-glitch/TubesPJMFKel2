@@ -1,6 +1,7 @@
 # Tubes PJM F Kel 2 – Pencarian Rute Terpendek
 
-Proyek ini adalah aplikasi **GUI untuk mencari rute terpendek menuju bengkel**, menggunakan **algoritma Dijkstra** dengan menerapkan mvc arhitecture.
+Proyek ini adalah aplikasi **GUI untuk mencari rute terpendek menuju bengkel**, menggunakan **algoritma Dijkstra**
+dengan menerapkan mvc arhitecture.
 
 reference algorithm from https://www.baeldung.com/java-dijkstra
 
@@ -10,12 +11,12 @@ requirement: jdk 17 + jgraphx 3.9.3
 
 Struktur ini mengikuti **pattern MVC (Model–View–Controller)**:
 
--   **Model**
-    Berisi data inti dan algoritma
--   **View**
-    Menampilkan hasil ke pengguna melalui tampilan grafis
--   **Controller**
-    Mengatur aliran data dan eksekusi logika
+- **Model**
+  Berisi data inti dan algoritma
+- **View**
+  Menampilkan hasil ke pengguna melalui tampilan grafis
+- **Controller**
+  Mengatur aliran data dan eksekusi logika
 
 ---
 
@@ -50,23 +51,24 @@ Kelas ini hanya berisi method:
 public static void main(String[] args)
 ```
 
-yang bertanggung jawab memulai tampilan utama (`GraphFrame`).
+yang bertanggung jawab memulai tampilan utama (`GUI`).
 
 ---
 
 ## 2. Package `controller`
 
 Berisi kelas–kelas yang menjalankan logika penghubung antara **model** dan **view**.
-Controller bertindak sebagai jembatan yang memproses perintah pengguna, memanggil model, dan mengirimkan hasil kembali ke UI.
+Controller bertindak sebagai jembatan yang memproses perintah pengguna, memanggil model, dan mengirimkan hasil kembali
+ke UI.
 
 
 ---
 
 ## 3. Package `dto`
+
 Digunakan untuk menyimpan hasil eksekusi algoritma Dijkstra dan Bersifat **immutable**
 
 ---
-
 
 ## 4. Package `model`
 

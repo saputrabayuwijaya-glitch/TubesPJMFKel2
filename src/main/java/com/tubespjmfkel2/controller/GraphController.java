@@ -87,18 +87,18 @@ public class GraphController {
      * </ol>
      * </p>
      *
-     * @param inputVertexName nama vertex baru yang ingin ditambahkan
+     * @param vertexNameInput nama vertex baru yang ingin ditambahkan
      * @return pesan error jika gagal, atau {@code null} jika berhasil
      */
-    public String addVertexName(String inputVertexName) {
-        if (inputVertexName == null || inputVertexName.trim().isEmpty())
+    public String addVertex(String vertexNameInput) {
+        if (vertexNameInput == null || vertexNameInput.trim().isEmpty())
             return "Nama Titik Tempat tidak boleh kosong!";
 
-        if (findVertexName(inputVertexName) != null)
-            return "Titik Tempat '" + inputVertexName + "' sudah ada!";
+        if (findVertex(vertexNameInput) != null)
+            return "Titik Tempat '" + vertexNameInput + "' sudah ada!";
 
-        Vertex vertexName = new Vertex(inputVertexName);
-        graph.addVertex(vertexName);
+        Vertex vertex = new Vertex(vertexNameInput);
+        graph.addVertex(vertex);
 
         Object uiVertex;
         uiGraph.getModel().beginUpdate();
@@ -106,7 +106,7 @@ public class GraphController {
             uiVertex = uiGraph.insertVertex(
                     uiGraph.getDefaultParent(),
                     null,
-                    inputVertexName,
+                    vertexNameInput,
                     50, 50,
                     60, 60,
                     "shape=ellipse");
@@ -114,7 +114,7 @@ public class GraphController {
             uiGraph.getModel().endUpdate();
         }
 
-        uiVertexMap.put(inputVertexName, uiVertex);
+        uiVertexMap.put(vertexNameInput, uiVertex);
 
         return null;
     }
@@ -133,33 +133,33 @@ public class GraphController {
      * <li>Menyimpan referensi edge untuk pengolahan berikutnya</li>
      * </ol>
      *
-     * @param inputVertexNameFrom nama vertex asal
-     * @param inputVertexNameTo   nama vertex tujuan
-     * @param inputWeight         bobot edge (> 0)
+     * @param vertexSourceInput      nama vertex asal
+     * @param vertexDestinationInput nama vertex tujuan
+     * @param weightInput            bobot edge (> 0)
      * @return pesan error jika gagal, atau {@code null} jika berhasil
      */
-    public String addEdge(String inputVertexNameFrom, String inputVertexNameTo, String inputWeight) {
+    public String addEdge(String vertexSourceInput, String vertexDestinationInput, String weightInput) {
 
-        if (inputVertexNameFrom == null || inputVertexNameTo == null || inputWeight == null)
+        if (vertexSourceInput == null || vertexDestinationInput == null || weightInput == null)
             return "Input tidak boleh kosong!";
 
         // cek validasi angka
         int weight;
         try {
-            weight = Integer.parseInt(inputWeight);
+            weight = Integer.parseInt(weightInput);
         } catch (NumberFormatException e) {
             return "Bobot harus angka!";
         }
 
-        Vertex vFrom = findVertexName(inputVertexNameFrom);
-        Vertex vTo = findVertexName(inputVertexNameTo);
-        String edgeKey = inputVertexNameFrom + "->" + inputVertexNameTo;
+        Vertex vertexSource = findVertex(vertexSourceInput);
+        Vertex vertexDestination = findVertex(vertexDestinationInput);
+        String edgeKey = vertexSourceInput + "->" + vertexDestinationInput;
 
-        if (vFrom == null)
+        if (vertexSource == null)
             return "Titik Tempat asal tidak ditemukan!";
-        if (vTo == null)
+        if (vertexDestination == null)
             return "Titik Tempat tujuan tidak ditemukan!";
-        if (inputVertexNameFrom.equals(inputVertexNameTo))
+        if (vertexSourceInput.equals(vertexDestinationInput))
             return "Titik Tempat tidak boleh menuju dirinya sendiri!";
         if (weight <= 0)
             return "Bobot harus lebih besar dari 0!";
@@ -167,20 +167,20 @@ public class GraphController {
             return "Rute ini sudah ada!";
 
         // tambah edge pada graph baru
-        graph.addEdge(vFrom, vTo, weight);
+        graph.addEdge(vertexSource, vertexDestination, weight);
 
         // ADD KE UI
         uiGraph.getModel().beginUpdate();
         try {
-            Object uiFrom = findVertexUI(inputVertexNameFrom);
-            Object uiTo = findVertexUI(inputVertexNameTo);
+            Object uiVertexSource = findVertexUI(vertexSourceInput);
+            Object uiVertexDestination = findVertexUI(vertexDestinationInput);
 
             Object uiEdge = uiGraph.insertEdge(
                     uiGraph.getDefaultParent(),
                     null,
                     weight,
-                    uiFrom,
-                    uiTo,
+                    uiVertexSource,
+                    uiVertexDestination,
                     "endArrow=none;strokeColor=black;"
 
             );
@@ -196,13 +196,13 @@ public class GraphController {
     /**
      * Mencari objek Vertex pada model Graph berdasarkan nama.
      *
-     * @param inputVertex nama vertex
+     * @param vertexNameInput nama vertex
      * @return objek {@link Vertex} jika ditemukan, atau {@code null} jika tidak ada
      */
-    public Vertex findVertexName(String inputVertex) {
+    public Vertex findVertex(String vertexNameInput) {
         return graph.getVertices()
                 .stream()
-                .filter(v -> v.getVertexName().equals(inputVertex))
+                .filter(v -> v.getName().equals(vertexNameInput))
                 .findFirst()
                 .orElse(null);
     }
@@ -210,11 +210,11 @@ public class GraphController {
     /**
      * Mencari objek vertex di UI (mxGraph) berdasarkan label nama vertex.
      *
-     * @param inputVertex nama vertex yang dicari
+     * @param vertexNameInput nama vertex yang dicari
      * @return objek vertex representasi di UI, atau {@code null} jika tidak ada
      */
-    private Object findVertexUI(String inputVertex) {
-        return uiVertexMap.get(inputVertex);
+    private Object findVertexUI(String vertexNameInput) {
+        return uiVertexMap.get(vertexNameInput);
     }
 
     /**

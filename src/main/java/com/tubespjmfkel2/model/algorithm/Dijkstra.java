@@ -65,6 +65,7 @@ public class Dijkstra {
             }
 
             settledVertices.add(currentVertex);
+
         }
 
         return graph;

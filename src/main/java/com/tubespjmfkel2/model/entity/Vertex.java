@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * Representasi dari sebuah simpul (vertex) dalam graph.
- *
+ * <p>
  * Setiap vertex memiliki:
  * <ul>
  * <li>Nama unik</li>
@@ -14,30 +14,33 @@ import java.util.List;
  * <li>Daftar vertex tetangga beserta bobot edge menuju tetangga tersebut</li>
  * <li>Daftar jalur terpendek yang mengarah ke vertex ini</li>
  * </ul>
- *
+ * <p>
  * Kelas ini digunakan sebagai struktur data utama untuk menjalankan
  * algoritma Dijkstra.
  */
 public class Vertex {
 
-    /** Nama atau label unik dari vertex */
-    private final String vertexName;
-
-    /** Daftar vertex yang menyusun jalur terpendek menuju vertex ini */
-    private List<Vertex> shortestPath = new ArrayList<>();
-
-    /** Jarak dari vertex sumber. Default = tak hingga */
-    private Integer distance = Integer.MAX_VALUE;
-
+    /**
+     * Nama atau label unik dari vertex
+     */
+    private final String name;
     private final List<Edge> edges = new ArrayList<>();
+    /**
+     * Daftar vertex yang menyusun jalur terpendek menuju vertex ini
+     */
+    private List<Vertex> shortestPath = new ArrayList<>();
+    /**
+     * Jarak dari vertex sumber. Default = tak hingga
+     */
+    private Integer distance = Integer.MAX_VALUE;
 
     /**
      * Membuat instance vertex baru dengan nama tertentu.
      *
-     * @param vertexName nama unik vertex
+     * @param name nama unik vertex
      */
-    public Vertex(String vertexName) {
-        this.vertexName = vertexName;
+    public Vertex(String name) {
+        this.name = name;
     }
 
     public void addEdge(Edge edge) {
@@ -48,8 +51,8 @@ public class Vertex {
         return edges;
     }
 
-    public String getVertexName() {
-        return vertexName;
+    public String getName() {
+        return name;
     }
 
     public List<Vertex> getShortestPath() {

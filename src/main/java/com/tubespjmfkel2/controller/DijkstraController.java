@@ -49,22 +49,22 @@ public class DijkstraController {
      * </ol>
      * </p>
      *
-     * @param inputStartVertex nama vertex awal
-     * @param inputEndVertex   nama vertex tujuan
+     * @param vertexStartInput nama vertex awal
+     * @param vertexEndInput   nama vertex tujuan
      * @return objek {@link DijkstraResult} berisi path dan total jarak,
-     *         atau <code>null</code> jika vertex tidak valid atau tidak ada jalur.
+     * atau <code>null</code> jika vertex tidak valid atau tidak ada jalur.
      */
-    public DijkstraResult findShortestPath(String inputStartVertex, String inputEndVertex) {
+    public DijkstraResult findShortestPath(String vertexStartInput, String vertexEndInput) {
 
-        Vertex startVertex = graphController.findVertexName(inputStartVertex);
-        Vertex endVertex = graphController.findVertexName(inputEndVertex);
+        Vertex vertexStart = graphController.findVertex(vertexStartInput);
+        Vertex vertexEnd = graphController.findVertex(vertexEndInput);
 
-        if (startVertex == null || endVertex == null)
+        if (vertexStart == null || vertexEnd == null)
             return null;
 
         // Kasus start == end
-        if (inputStartVertex.equals(inputEndVertex))
-            return new DijkstraResult(List.of(inputStartVertex), 0);
+        if (vertexStartInput.equals(vertexEndInput))
+            return new DijkstraResult(List.of(vertexStartInput), 0);
 
         // Reset dahulu distance dan shortestpathnya
         for (Vertex vertex : graphController.getGraph().getVertices()) {
@@ -74,10 +74,10 @@ public class DijkstraController {
         // Jalankan Dijkstra
         Dijkstra.calculateShortestPathFromSource(
                 graphController.getGraph(),
-                startVertex);
+                vertexStart);
 
         // Jika tidak ada jalur (distance tetap MAX_VALUE)
-        if (endVertex.getDistance() == Integer.MAX_VALUE) {
+        if (vertexEnd.getDistance() == Integer.MAX_VALUE) {
             return null;
         }
 
@@ -85,10 +85,10 @@ public class DijkstraController {
         List<String> path = new ArrayList<>();
 
         // Masukkan node hasil shortestPath
-        for (Vertex vertex : endVertex.getShortestPath()) {
-            path.add(vertex.getVertexName());
+        for (Vertex vertex : vertexEnd.getShortestPath()) {
+            path.add(vertex.getName());
         }
-        path.add(endVertex.getVertexName());
-        return new DijkstraResult(path, endVertex.getDistance());
+        path.add(vertexEnd.getName());
+        return new DijkstraResult(path, vertexEnd.getDistance());
     }
 }
