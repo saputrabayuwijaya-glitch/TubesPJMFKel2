@@ -23,8 +23,8 @@ public class Vertex {
     /**
      * Nama atau label unik dari vertex
      */
-    private final String name;
-    private final List<Edge> edges = new ArrayList<>();
+    private String name;
+    private List<Edge> edges = new ArrayList<>();
     /**
      * Daftar vertex yang menyusun jalur terpendek menuju vertex ini
      */

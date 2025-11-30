@@ -20,11 +20,15 @@ import java.util.List;
  */
 public class DijkstraResult {
 
-    /** List nama vertex dalam urutan rute terpendek. */
-    private final List<String> path;
+    /**
+     * List nama vertex dalam urutan rute terpendek.
+     */
+    private List<String> path;
 
-    /** Total jarak (bobot) dari rute yang ditemukan. */
-    private final int distance;
+    /**
+     * Total jarak (bobot) dari rute yang ditemukan.
+     */
+    private int distance;
 
     /**
      * Membuat instance baru hasil perhitungan Dijkstra.

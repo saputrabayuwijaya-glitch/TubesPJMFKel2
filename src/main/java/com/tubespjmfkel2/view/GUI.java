@@ -23,20 +23,20 @@ public class GUI extends JFrame {
      * Controller untuk mengelola graph baik dari sisi model maupun UI graph mapping.
      * Instance ini juga digunakan sebagai basis data vertex dan edge dalam perhitungan Dijkstra.
      */
-    private final GraphController graphController = new GraphController();
+    private GraphController graphController = new GraphController();
 
     /**
      * Controller untuk menjalankan perhitungan rute terpendek menggunakan algoritma Dijkstra.
      * Class ini bergantung pada {@link GraphController} untuk mendapatkan data graph.
      */
-    private final DijkstraController dijkstraController = new DijkstraController(graphController);
+    private DijkstraController dijkstraController = new DijkstraController(graphController);
 
     /**
      * Komponen visualisasi graph dari library JGraphX.
      * Komponen ini akan melakukan rendering graph yang disediakan oleh
      * {@link GraphController#getUiGraph()}.
      */
-    private final mxGraphComponent graphComponent = new mxGraphComponent(graphController.getUiGraph());
+    private mxGraphComponent graphComponent = new mxGraphComponent(graphController.getUiGraph());
 
     /**
      * Konstruktor utama jendela GUI.

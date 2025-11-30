@@ -32,19 +32,19 @@ public class GraphController {
     /**
      * Object graph visual dari mxGraph untuk ditampilkan ke UI.
      */
-    private final mxGraph uiGraph = new mxGraph();
+    private mxGraph uiGraph = new mxGraph();
     /**
      * Penyimpanan referensi edge UI berdasarkan pasangan vertex 'A->B'.
      */
-    private final Map<String, Object> uiEdgeMap = new HashMap<>();
+    private Map<String, Object> uiEdgeMap = new HashMap<>();
     /**
      * Mapping vertex UI: "A" → UI Vertex Object
      */
-    private final Map<String, Object> uiVertexMap = new HashMap<>();
+    private Map<String, Object> uiVertexMap = new HashMap<>();
     /**
      * Struktur graph inti untuk perhitungan algoritmik.
      */
-    private final Graph graph = new Graph();
+    private Graph graph = new Graph();
 
     /**
      * Mengambil objek graph inti yang digunakan algoritma.

@@ -8,21 +8,25 @@ import java.util.Set;
 /**
  * Kelas Graph merepresentasikan struktur graf berarah yang terdiri dari
  * kumpulan simpul (Vertex) dan sisi (Edge).
- *
+ * <p>
  * Setiap Vertex dapat dihubungkan melalui satu atau lebih Edge
  * dengan bobot yang menyatakan jarak atau biaya perjalanan.
- *
+ * <p>
  * Kelas ini mendukung penambahan simpul, penambahan edge, serta
  * melakukan reset terhadap seluruh vertex sebelum menjalankan algoritma
  * pencarian jalur.
  */
 public class Graph {
 
-    /** Kumpulan seluruh simpul dalam graf */
-    private final Set<Vertex> vertices = new HashSet<>();
+    /**
+     * Kumpulan seluruh simpul dalam graf
+     */
+    private Set<Vertex> vertices = new HashSet<>();
 
-    /** Kumpulan seluruh edge dalam graf */
-    private final List<Edge> edges = new ArrayList<>();
+    /**
+     * Kumpulan seluruh edge dalam graf
+     */
+    private List<Edge> edges = new ArrayList<>();
 
     /**
      * Mengembalikan seluruh simpul dalam graf.

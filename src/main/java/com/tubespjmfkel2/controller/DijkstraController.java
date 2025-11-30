@@ -22,7 +22,7 @@ import com.tubespjmfkel2.model.entity.Vertex;
  */
 public class DijkstraController {
 
-    private final GraphController graphController;
+    private GraphController graphController;
 
     /**
      * Konstruktor DijkstraController.

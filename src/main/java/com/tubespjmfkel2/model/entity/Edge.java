@@ -4,21 +4,27 @@ package com.tubespjmfkel2.model.entity;
  * Kelas Edge merepresentasikan sebuah sisi (link) dalam graf berarah.
  * Setiap edge menghubungkan satu simpul asal (source) ke simpul tujuan (destination)
  * dengan bobot tertentu.
- *
+ * <p>
  * Edge digunakan oleh algoritma pencarian jalur seperti Dijkstra untuk
  * menghitung jarak terpendek antar simpul di dalam graf.
  */
 
 public class Edge {
 
-    /** Simpul asal dari edge */
-    private final Vertex source;
+    /**
+     * Simpul asal dari edge
+     */
+    private Vertex source;
 
-    /** Simpul tujuan dari edge */
-    private final Vertex destination;
+    /**
+     * Simpul tujuan dari edge
+     */
+    private Vertex destination;
 
-    /** Bobot atau jarak yang merepresentasikan biaya dari source ke destination */
-    private final int weight;
+    /**
+     * Bobot atau jarak yang merepresentasikan biaya dari source ke destination
+     */
+    private int weight;
 
     /**
      * Membuat sebuah edge baru yang menghubungkan dua simpul dengan bobot tertentu.
@@ -35,6 +41,7 @@ public class Edge {
 
     /**
      * Mengembalikan simpul asal edge.
+     *
      * @return Vertex sumber
      */
     public Vertex getSource() {
@@ -43,6 +50,7 @@ public class Edge {
 
     /**
      * Mengembalikan simpul tujuan edge.
+     *
      * @return Vertex tujuan
      */
     public Vertex getDestination() {
@@ -51,6 +59,7 @@ public class Edge {
 
     /**
      * Mengembalikan bobot perjalanan dari source ke destination.
+     *
      * @return Bobot edge
      */
     public int getWeight() {
