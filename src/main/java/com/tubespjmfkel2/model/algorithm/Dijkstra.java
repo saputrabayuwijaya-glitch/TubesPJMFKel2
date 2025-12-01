@@ -53,7 +53,7 @@ public class Dijkstra {
             // lagi
             unsettledVertices.remove(currentVertex);
             // loop edge untuk currentvertexnya
-            for (Edge edge : currentVertex.getEdges()) {
+            for (Edge edge : currentVertex.getAdjacentEdges()) {
                 // edge tujuan akan dimasukan kedalam tetangga
                 Vertex adjacent = edge.getDestination();
                 int weight = edge.getWeight();
@@ -108,14 +108,14 @@ public class Dijkstra {
      *
      * @param evaluationVertex vertex tetangga yang sedang dievaluasi
      * @param edgeWeight       bobot edge dari sumber menuju vertex tetangga
-     * @param sourceVertex     vertex sumber saat ini
+     * @param currentVertex    vertex sumber saat ini
      */
     private static void calculateMinimumDistance(
             Vertex evaluationVertex,
             Integer edgeWeight,
-            Vertex sourceVertex) {
+            Vertex currentVertex) {
 
-        Integer sourceDistance = sourceVertex.getDistance();
+        Integer sourceDistance = currentVertex.getDistance();
 
         // Jika jarak baru lebih kecil, lakukan update
         if (sourceDistance + edgeWeight < evaluationVertex.getDistance()) {
@@ -123,8 +123,8 @@ public class Dijkstra {
             evaluationVertex.setDistance(sourceDistance + edgeWeight);
 
             // Salin path dari sumber dan tambahkan vertex saat ini
-            List<Vertex> shortestPath = new ArrayList<>(sourceVertex.getShortestPath());
-            shortestPath.add(sourceVertex);
+            List<Vertex> shortestPath = new ArrayList<>(currentVertex.getShortestPath());
+            shortestPath.add(currentVertex);
 
             evaluationVertex.setShortestPath(shortestPath);
         }

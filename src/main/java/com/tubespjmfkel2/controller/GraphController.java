@@ -46,14 +46,6 @@ public class GraphController {
      */
     private Graph graph = new Graph();
 
-    /**
-     * Mengambil objek graph inti yang digunakan algoritma.
-     *
-     * @return objek {@link Graph} yang menyimpan struktur vertex dan edge.
-     */
-    public Graph getGraph() {
-        return graph;
-    }
 
     /**
      * Mengambil objek visual mxGraph untuk ditampilkan dalam UI.
@@ -72,6 +64,25 @@ public class GraphController {
      */
     public Map<String, Object> getUiEdgeMap() {
         return uiEdgeMap;
+    }
+
+    /**
+     * Mencari objek vertex di UI (mxGraph) berdasarkan label nama vertex.
+     *
+     * @param vertexNameInput nama vertex yang dicari
+     * @return objek vertex representasi di UI, atau {@code null} jika tidak ada
+     */
+    private Object getUiVertex(String vertexNameInput) {
+        return uiVertexMap.get(vertexNameInput);
+    }
+
+    /**
+     * Mengambil objek graph inti yang digunakan algoritma.
+     *
+     * @return objek {@link Graph} yang menyimpan struktur vertex dan edge.
+     */
+    public Graph getGraph() {
+        return graph;
     }
 
     /**
@@ -172,8 +183,8 @@ public class GraphController {
         // ADD KE UI
         uiGraph.getModel().beginUpdate();
         try {
-            Object uiVertexSource = findVertexUI(vertexSourceInput);
-            Object uiVertexDestination = findVertexUI(vertexDestinationInput);
+            Object uiVertexSource = getUiVertex(vertexSourceInput);
+            Object uiVertexDestination = getUiVertex(vertexDestinationInput);
 
             Object uiEdge = uiGraph.insertEdge(
                     uiGraph.getDefaultParent(),
@@ -207,15 +218,6 @@ public class GraphController {
                 .orElse(null);
     }
 
-    /**
-     * Mencari objek vertex di UI (mxGraph) berdasarkan label nama vertex.
-     *
-     * @param vertexNameInput nama vertex yang dicari
-     * @return objek vertex representasi di UI, atau {@code null} jika tidak ada
-     */
-    private Object findVertexUI(String vertexNameInput) {
-        return uiVertexMap.get(vertexNameInput);
-    }
 
     /**
      * Mereset seluruh graph:

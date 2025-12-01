@@ -44,6 +44,7 @@ public class GUI extends JFrame {
      * serta pengaturan frame agar tampil di tengah layar.
      */
     public GUI() {
+        
         super("Pencarian Rute Terpendek Menuju Bengkel");
 
         JButton btnAddVertex = new JButton("Tambah Titik Tempat");
@@ -194,10 +195,8 @@ public class GUI extends JFrame {
      * Mereset seluruh data graph ke kondisi awal setelah konfirmasi user.
      */
     private void resetAll() {
-
         graphController.resetGraph();
         refreshGraph();
-
     }
 
     /**

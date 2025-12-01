@@ -24,7 +24,10 @@ public class Vertex {
      * Nama atau label unik dari vertex
      */
     private String name;
-    private List<Edge> edges = new ArrayList<>();
+    /**
+     * Daftar tetangga vertex
+     */
+    private List<Edge> adjacentEdges = new ArrayList<>();
     /**
      * Daftar vertex yang menyusun jalur terpendek menuju vertex ini
      */
@@ -43,12 +46,12 @@ public class Vertex {
         this.name = name;
     }
 
-    public void addEdge(Edge edge) {
-        edges.add(edge);
+    public void addAdjacentEdge(Edge edge) {
+        adjacentEdges.add(edge);
     }
 
-    public List<Edge> getEdges() {
-        return edges;
+    public List<Edge> getAdjacentEdges() {
+        return adjacentEdges;
     }
 
     public String getName() {
