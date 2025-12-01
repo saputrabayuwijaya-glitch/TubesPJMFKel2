@@ -66,8 +66,8 @@ public class Graph {
      */
     public void addEdge(Vertex source, Vertex destination, int weight) {
         Edge edge = new Edge(source, destination, weight);
-        edges.add(edge);
-        source.addAdjacentEdge(edge);
+        source.addNeighbor(edge);
+        destination.addNeighbor(edge);
     }
 
     /**

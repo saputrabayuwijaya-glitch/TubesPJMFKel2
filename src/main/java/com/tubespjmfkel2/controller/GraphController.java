@@ -108,7 +108,8 @@ public class GraphController {
         if (findVertex(vertexNameInput) != null)
             return "Titik Tempat '" + vertexNameInput + "' sudah ada!";
 
-        Vertex vertex = new Vertex(vertexNameInput);
+        Vertex vertex = new Vertex();
+        vertex.setName(vertexNameInput);
         graph.addVertex(vertex);
 
         Object uiVertex;
@@ -118,7 +119,7 @@ public class GraphController {
                     uiGraph.getDefaultParent(),
                     null,
                     vertexNameInput,
-                    50, 50,
+                    100, 100,
                     60, 60,
                     "shape=ellipse");
         } finally {
@@ -164,7 +165,8 @@ public class GraphController {
 
         Vertex vertexSource = findVertex(vertexSourceInput);
         Vertex vertexDestination = findVertex(vertexDestinationInput);
-        String edgeKey = vertexSourceInput + "->" + vertexDestinationInput;
+        String edgeKey1 = vertexSourceInput + "->" + vertexDestinationInput;
+        String edgeKey2 = vertexDestinationInput + "->" + vertexSourceInput;
 
         if (vertexSource == null)
             return "Titik Tempat asal tidak ditemukan!";
@@ -174,7 +176,7 @@ public class GraphController {
             return "Titik Tempat tidak boleh menuju dirinya sendiri!";
         if (weight <= 0)
             return "Bobot harus lebih besar dari 0!";
-        if (uiEdgeMap.containsKey(edgeKey))
+        if (uiEdgeMap.containsKey(edgeKey1) || uiEdgeMap.containsKey(edgeKey2))
             return "Rute ini sudah ada!";
 
         // tambah edge pada graph baru
@@ -196,7 +198,8 @@ public class GraphController {
 
             );
 
-            uiEdgeMap.put(edgeKey, uiEdge);
+            uiEdgeMap.put(edgeKey1, uiEdge);
+            uiEdgeMap.put(edgeKey2, uiEdge);
         } finally {
             uiGraph.getModel().endUpdate();
         }
@@ -216,6 +219,14 @@ public class GraphController {
                 .filter(v -> v.getName().equals(vertexNameInput))
                 .findFirst()
                 .orElse(null);
+    }
+
+    private String generateUndirectedKey(String a, String b) {
+        // sorting agar "A-B" selalu sama meskipun inputnya "B,A"
+        if (a.compareToIgnoreCase(b) < 0)
+            return a + "-" + b;
+        else
+            return b + "-" + a;
     }
 
 

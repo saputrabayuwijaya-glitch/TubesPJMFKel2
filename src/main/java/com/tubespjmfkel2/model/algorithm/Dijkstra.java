@@ -30,46 +30,60 @@ public class Dijkstra {
      * Menjalankan algoritma Dijkstra untuk menghitung jarak terpendek
      * dari vertex sumber (source) menuju seluruh vertex dalam graph.
      *
-     * @param graph  graph yang berisi vertex, edge, dan bobotnya
      * @param source vertex awal (jarak awal = 0).
-     * @return graph yang sudah terisi informasi jarak terpendek pada setiap vertex
      */
-    public static Graph calculateShortestPathFromSource(Graph graph, Vertex source) {
+    public static void calculateShortestPathFromSource(Vertex source) {
 
+        // Set jarak vertex sumber menjadi 0 (titik awal perjalanan)
         source.setDistance(0);
 
+        // Inisialisasi himpunan vertex yang sudah final jaraknya (tidak akan berubah lagi)
         Set<Vertex> settledVertices = new HashSet<>();
+
+        // Inisialisasi himpunan vertex yang masih perlu dievaluasi jaraknya (masih sementara)
         Set<Vertex> unsettledVertices = new HashSet<>();
 
+        // Masukkan vertex sumber ke dalam unsettled agar mulai diproses
         unsettledVertices.add(source);
-        // jima pada saat vertex yang belum mapan itu masih ada
-        // akan melakukan yang namanaya evaluasi
 
+        // Loop selama masih ada vertex yang belum dievaluasi
         while (!unsettledVertices.isEmpty()) {
-            // vertex yang belum mapan itu akan dimasukan kedalam current vertex melalui
-            // method getLowsetDistanceVertex
+
+            // Ambil vertex dengan jarak sementara paling kecil dari unsettled
             Vertex currentVertex = getLowestDistanceVertex(unsettledVertices);
-            // vertex saat ini dihapus dari unsetlled vertex, jadi tidak perlu di looping
-            // lagi
+
+            // Hapus dari unsettled karena akan segera difinalisasi
             unsettledVertices.remove(currentVertex);
-            // loop edge untuk currentvertexnya
-            for (Edge edge : currentVertex.getAdjacentEdges()) {
-                // edge tujuan akan dimasukan kedalam tetangga
-                Vertex adjacent = edge.getDestination();
+
+            // Loop semua edge yang terhubung ke currentVertex dari adjacency list
+            for (Edge edge : currentVertex.getNeighbors()) {
+
+                // Tentukan neighbor (neighbor vertex), karena edge disimpan 2 arah
+                Vertex neighbor = edge.getSource().equals(currentVertex)
+                        ? edge.getDestination() // Jika current = source, maka neighbor = destination
+                        : edge.getSource(); // Jika current = destination, maka neighbor = source
+
+                // Ambil bobot jarak dari edge tersebut
                 int weight = edge.getWeight();
-                //
-                if (!settledVertices.contains(adjacent)) {
-                    calculateMinimumDistance(adjacent, weight, currentVertex);
-                    unsettledVertices.add(adjacent);
+
+                // Jika neighbor belum diproses final jaraknya, lakukan relaksasi
+                if (!settledVertices.contains(neighbor)) {
+
+                    // Hitung & update jarak minimum jika lebih kecil dari sebelumnya
+                    calculateMinimumDistance(neighbor, weight, currentVertex);
+
+                    // Masukkan neighbor ke unsettled agar ikut diproses di iterasi berikutnya
+                    unsettledVertices.add(neighbor);
                 }
             }
 
+            // Tandai currentVertex sebagai settled (jaraknya sudah final)
             settledVertices.add(currentVertex);
-
         }
 
-        return graph;
+
     }
+
 
     /**
      * Mengambil vertex dengan jarak (distance) terkecil dari himpunan vertex

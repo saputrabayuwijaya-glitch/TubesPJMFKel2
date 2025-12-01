@@ -27,7 +27,7 @@ public class Vertex {
     /**
      * Daftar tetangga vertex
      */
-    private List<Edge> adjacentEdges = new ArrayList<>();
+    private List<Edge> neighbors = new ArrayList<>();
     /**
      * Daftar vertex yang menyusun jalur terpendek menuju vertex ini
      */
@@ -36,22 +36,22 @@ public class Vertex {
      * Jarak dari vertex sumber. Default = tak hingga
      */
     private Integer distance = Integer.MAX_VALUE;
+    
 
-    /**
-     * Membuat instance vertex baru dengan nama tertentu.
-     *
-     * @param name nama unik vertex
-     */
-    public Vertex(String name) {
+    public void addNeighbor(Edge edge) {
+        neighbors.add(edge);
+    }
+
+    public List<Edge> getNeighbors() {
+        return neighbors;
+    }
+
+    public void setNeighbors(List<Edge> neighbors) {
+        this.neighbors = neighbors;
+    }
+
+    public void setName(String name) {
         this.name = name;
-    }
-
-    public void addAdjacentEdge(Edge edge) {
-        adjacentEdges.add(edge);
-    }
-
-    public List<Edge> getAdjacentEdges() {
-        return adjacentEdges;
     }
 
     public String getName() {

@@ -72,9 +72,7 @@ public class DijkstraController {
             vertex.getShortestPath().clear();
         }
         // Jalankan Dijkstra
-        Dijkstra.calculateShortestPathFromSource(
-                graphController.getGraph(),
-                vertexStart);
+        Dijkstra.calculateShortestPathFromSource(vertexStart);
 
         // Jika tidak ada jalur (distance tetap MAX_VALUE)
         if (vertexEnd.getDistance() == Integer.MAX_VALUE) {

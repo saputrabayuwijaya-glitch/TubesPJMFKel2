@@ -1,0 +1,59 @@
+TYPE,SOURCE,DESTINATION,WEIGHT
+V,Rumah,,
+V,Sekolah,,
+V,Kampus,,
+V,Pasar,,
+V,Toko,,
+V,Supermarket,,
+V,Taman,,
+V,Perpustakaan,,
+V,Stasiun,,
+V,Terminal,,
+V,Bengkel,,
+V,Bank,,
+V,Kantor Pos,,
+V,Apotek,,
+V,Klinik,,
+V,Masjid,,
+V,Lapangan,,
+V,Mall,,
+V,Gudang,,
+V,Halte,,
+E,Lapangan,Klinik,1
+E,Apotek,Kampus,8
+E,Taman,Kampus,2
+E,Rumah,Kampus,7
+E,Bengkel,Sekolah,17
+E,Perpustakaan,Terminal,18
+E,Bank,Lapangan,16
+E,Kampus,Kantor Pos,20
+E,Mall,Rumah,17
+E,Bengkel,Apotek,9
+E,Apotek,Terminal,13
+E,Kantor Pos,Supermarket,7
+E,Gudang,Apotek,9
+E,Taman,Bank,2
+E,Terminal,Rumah,13
+E,Klinik,Taman,2
+E,Toko,Lapangan,11
+E,Supermarket,Lapangan,14
+E,Klinik,Kampus,19
+E,Kampus,Pasar,20
+E,Stasiun,Toko,6
+E,Bengkel,Supermarket,18
+E,Pasar,Stasiun,16
+E,Gudang,Terminal,5
+E,Sekolah,Stasiun,10
+E,Gudang,Stasiun,18
+E,Perpustakaan,Halte,20
+E,Pasar,Masjid,9
+E,Halte,Terminal,6
+E,Kantor Pos,Supermarket,2
+E,Perpustakaan,Klinik,3
+E,Perpustakaan,Masjid,18
+E,Sekolah,Kantor Pos,12
+E,Toko,Sekolah,7
+E,Lapangan,Kampus,10
+E,Apotek,Kantor Pos,6
+E,Bank,Kampus,12
+E,Perpustakaan,Toko,19
