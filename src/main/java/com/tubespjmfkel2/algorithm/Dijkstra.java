@@ -1,13 +1,12 @@
-package com.tubespjmfkel2.model.algorithm;
+package com.tubespjmfkel2.algorithm;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.tubespjmfkel2.model.entity.Edge;
-import com.tubespjmfkel2.model.entity.Graph;
-import com.tubespjmfkel2.model.entity.Vertex;
+import com.tubespjmfkel2.domain.Edge;
+import com.tubespjmfkel2.domain.Vertex;
 
 /**
  * Kelas ini mengimplementasikan algoritma Dijkstra untuk mencari

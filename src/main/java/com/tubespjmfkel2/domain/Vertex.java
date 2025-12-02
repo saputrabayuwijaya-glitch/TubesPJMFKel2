@@ -1,4 +1,4 @@
-package com.tubespjmfkel2.model.entity;
+package com.tubespjmfkel2.domain;
 
 import java.util.ArrayList;
 
@@ -18,6 +18,7 @@ import java.util.List;
  * Kelas ini digunakan sebagai struktur data utama untuk menjalankan
  * algoritma Dijkstra.
  */
+
 public class Vertex {
 
     /**
@@ -36,7 +37,7 @@ public class Vertex {
      * Jarak dari vertex sumber. Default = tak hingga
      */
     private Integer distance = Integer.MAX_VALUE;
-    
+
 
     public void addNeighbor(Edge edge) {
         neighbors.add(edge);

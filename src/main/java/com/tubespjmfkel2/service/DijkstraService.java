@@ -1,12 +1,12 @@
-package com.tubespjmfkel2.controller;
+package com.tubespjmfkel2.service;
 
 import java.util.ArrayList;
 
 import java.util.List;
 
 import com.tubespjmfkel2.dto.DijkstraResult;
-import com.tubespjmfkel2.model.algorithm.Dijkstra;
-import com.tubespjmfkel2.model.entity.Vertex;
+import com.tubespjmfkel2.algorithm.Dijkstra;
+import com.tubespjmfkel2.domain.Vertex;
 
 /**
  * Controller yang bertanggung jawab menjalankan proses perhitungan
@@ -20,18 +20,18 @@ import com.tubespjmfkel2.model.entity.Vertex;
  * siap dipakai oleh GUI atau lapisan presentasi lainnya.
  * </p>
  */
-public class DijkstraController {
+public class DijkstraService {
 
-    private GraphController graphController;
+    private GraphService graphService;
 
     /**
      * Konstruktor DijkstraController.
      *
-     * @param graphController controller yang menyediakan graph dan operasi
-     *                        pendukungnya.
+     * @param graphService controller yang menyediakan graph dan operasi
+     *                     pendukungnya.
      */
-    public DijkstraController(GraphController graphController) {
-        this.graphController = graphController;
+    public DijkstraService(GraphService graphService) {
+        this.graphService = graphService;
     }
 
     /**
@@ -56,8 +56,8 @@ public class DijkstraController {
      */
     public DijkstraResult findShortestPath(String vertexStartInput, String vertexEndInput) {
 
-        Vertex vertexStart = graphController.findVertex(vertexStartInput);
-        Vertex vertexEnd = graphController.findVertex(vertexEndInput);
+        Vertex vertexStart = graphService.findVertex(vertexStartInput);
+        Vertex vertexEnd = graphService.findVertex(vertexEndInput);
 
         if (vertexStart == null || vertexEnd == null)
             return null;
@@ -67,7 +67,7 @@ public class DijkstraController {
             return new DijkstraResult(List.of(vertexStartInput), 0);
 
         // Reset dahulu distance dan shortestpathnya
-        for (Vertex vertex : graphController.getGraph().getVertices()) {
+        for (Vertex vertex : graphService.getGraph().getVertices()) {
             vertex.setDistance(Integer.MAX_VALUE);
             vertex.getShortestPath().clear();
         }

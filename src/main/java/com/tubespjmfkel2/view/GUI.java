@@ -2,23 +2,25 @@ package com.tubespjmfkel2.view;
 
 import java.awt.BorderLayout;
 import java.util.List;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
 
 import com.mxgraph.swing.mxGraphComponent;
-import com.tubespjmfkel2.controller.DijkstraController;
-import com.tubespjmfkel2.controller.GraphController;
+import com.tubespjmfkel2.service.DijkstraService;
+import com.tubespjmfkel2.service.GraphService;
 import com.tubespjmfkel2.dto.DijkstraResult;
 import com.mxgraph.view.mxGraph;
 import org.apache.commons.csv.CSVFormat;
 import com.mxgraph.layout.mxFastOrganicLayout;
 
+
 /**
  * Kelas utama antarmuka grafis (GUI) aplikasi pencarian rute terpendek
  * menggunakan algoritma Dijkstra.
  */
+
 public class GUI extends JFrame {
 
     /**
@@ -27,22 +29,23 @@ public class GUI extends JFrame {
      * Instance ini juga digunakan sebagai basis data vertex dan edge dalam
      * perhitungan Dijkstra.
      */
-    private GraphController graphController = new GraphController();
+
+    private GraphService graphService = new GraphService();
 
     /**
      * Controller untuk menjalankan perhitungan rute terpendek menggunakan algoritma
      * Dijkstra.
-     * Class ini bergantung pada {@link GraphController} untuk mendapatkan data
+     * Class ini bergantung pada {@link GraphService} untuk mendapatkan data
      * graph.
      */
-    private DijkstraController dijkstraController = new DijkstraController(graphController);
+    private DijkstraService dijkstraService = new DijkstraService(graphService);
 
     /**
      * Komponen visualisasi graph dari library JGraphX.
      * Komponen ini akan melakukan rendering graph yang disediakan oleh
-     * {@link GraphController#getUiGraph()}.
+     * {@link GraphService#getUiGraph()}.
      */
-    private mxGraphComponent graphComponent = new mxGraphComponent(graphController.getUiGraph());
+    private mxGraphComponent graphComponent = new mxGraphComponent(graphService.getUiGraph());
 
     /**
      * Konstruktor utama jendela GUI.
@@ -73,7 +76,7 @@ public class GUI extends JFrame {
         headerPanel.add(btnImportCSV);
 
         setLayout(new BorderLayout());
-        add(headerPanel, BorderLayout.SOUTH);
+        add(headerPanel, BorderLayout.NORTH);
         add(graphComponent, BorderLayout.CENTER);
 
         graphComponent.setConnectable(false);
@@ -102,9 +105,9 @@ public class GUI extends JFrame {
                 String target = row.get("target");
                 String weight = row.get("weight");
 
-                if (type.equalsIgnoreCase("V") && graphController.addVertex(source) == null)
+                if (type.equalsIgnoreCase("V") && graphService.addVertex(source) == null)
                     v++;
-                if (type.equalsIgnoreCase("E") && graphController.addEdge(source, target, weight) == null)
+                if (type.equalsIgnoreCase("E") && graphService.addEdge(source, target, weight) == null)
                     e++;
             }
 
@@ -125,7 +128,7 @@ public class GUI extends JFrame {
      */
     private void addVertex() {
         String vertexNameInput = JOptionPane.showInputDialog("Nama Titik Tempat:");
-        String error = graphController.addVertex(vertexNameInput);
+        String error = graphService.addVertex(vertexNameInput);
         if (error != null)
             JOptionPane.showMessageDialog(null, error);
         refreshGraph();
@@ -142,7 +145,7 @@ public class GUI extends JFrame {
         String vertexSourceInput = JOptionPane.showInputDialog("Dari Titik Tempat:");
         String vertexDestinationInput = JOptionPane.showInputDialog("Menuju Titik Tempat:");
         String weightInput = JOptionPane.showInputDialog("Jarak (km):");
-        String error = graphController.addEdge(vertexSourceInput, vertexDestinationInput, weightInput);
+        String error = graphService.addEdge(vertexSourceInput, vertexDestinationInput, weightInput);
         if (error != null)
             JOptionPane.showMessageDialog(null, error);
         refreshGraph();
@@ -168,7 +171,7 @@ public class GUI extends JFrame {
         String vertexStartInput = JOptionPane.showInputDialog("Dari Titik Tempat:");
         String vertexEndInput = JOptionPane.showInputDialog("Menuju Titik Tempat:");
 
-        DijkstraResult result = dijkstraController.findShortestPath(vertexStartInput, vertexEndInput);
+        DijkstraResult result = dijkstraService.findShortestPath(vertexStartInput, vertexEndInput);
         if (result == null) {
             JOptionPane.showMessageDialog(null, "Rute tidak ditemukan!");
             return;
@@ -177,7 +180,7 @@ public class GUI extends JFrame {
         List<String> path = result.getPath();
         int distance = result.getDistance();
 
-        highlightPath(graphController.getUiGraph(), graphController, path);
+        highlightPath(graphService.getUiGraph(), graphService, path);
 
         StringBuilder sb = new StringBuilder();
         sb.append("Rute Terpendek\n")
@@ -207,18 +210,17 @@ public class GUI extends JFrame {
      * </ul>
      * </p>
      *
-     * @param graph           Graph UI yang akan dimodifikasi ({@link mxGraph}).
-     * @param graphController Controller penyedia mapping key edge→object cell UI.
-     * @param path            Daftar nama vertex yang membentuk rute.
+     * @param graph        Graph UI yang akan dimodifikasi ({@link mxGraph}).
+     * @param graphService Controller penyedia mapping key edge→object cell UI.
+     * @param path         Daftar nama vertex yang membentuk rute.
      */
-    public static void highlightPath(mxGraph graph, GraphController graphController, List<String> path) {
+    public static void highlightPath(mxGraph graph, GraphService graphService, List<String> path) {
         graph.getModel().beginUpdate();
         try {
-            graphController.getUiEdgeMap().forEach(
-                    (k, e) -> graph.setCellStyle("strokeColor=red;strokeWidth=1;endArrow=none;", new Object[] { e }));
+            graphService.getUiEdgeMap().forEach((k, e) -> graph.setCellStyle("strokeColor=red;strokeWidth=1;endArrow=none;", new Object[]{e}));
 
             for (int i = 0; i < path.size() - 1; i++) {
-                colorEdge(graph, graphController, path.get(i), path.get(i + 1));
+                colorEdge(graph, graphService, path.get(i), path.get(i + 1));
             }
 
         } finally {
@@ -231,15 +233,15 @@ public class GUI extends JFrame {
      * lebih tebal.
      *
      * @param graph             Graph UI target.
-     * @param graphController   Penyedia mapping edge.
+     * @param graphService      Penyedia mapping edge.
      * @param vertexSource      Nama vertex asal.
      * @param vertexDestination Nama vertex tujuan.
      */
-    private static void colorEdge(mxGraph graph, GraphController graphController, String vertexSource,
-            String vertexDestination) {
-        Object edge = graphController.getUiEdgeMap().get(vertexSource + "->" + vertexDestination);
+    private static void colorEdge(mxGraph graph, GraphService graphService, String vertexSource,
+                                  String vertexDestination) {
+        Object edge = graphService.getUiEdgeMap().get(vertexSource + "->" + vertexDestination);
         if (edge != null) {
-            graph.setCellStyle("strokeColor=green;strokeWidth=3;endArrow=none;", new Object[] { edge });
+            graph.setCellStyle("strokeColor=green;strokeWidth=3;endArrow=none;", new Object[]{edge});
         }
     }
 
@@ -247,7 +249,7 @@ public class GUI extends JFrame {
      * Mereset seluruh data graph ke kondisi awal setelah konfirmasi user.
      */
     private void resetAll() {
-        graphController.resetGraph();
+        graphService.resetGraph();
         refreshGraph();
     }
 
@@ -255,8 +257,8 @@ public class GUI extends JFrame {
      * Me-refresh visual graph pada UI agar setiap perubahan vertex/edge terlihat.
      */
     private void refreshGraph() {
-        var layout = new mxFastOrganicLayout(graphController.getUiGraph());
-        layout.execute(graphController.getUiGraph().getDefaultParent());
+        var layout = new mxFastOrganicLayout(graphService.getUiGraph());
+        layout.execute(graphService.getUiGraph().getDefaultParent());
         graphComponent.refresh();
         repaint();
         revalidate();

@@ -1,4 +1,4 @@
-package com.tubespjmfkel2.model.entity;
+package com.tubespjmfkel2.domain;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,7 +16,9 @@ import java.util.Set;
  * melakukan reset terhadap seluruh vertex sebelum menjalankan algoritma
  * pencarian jalur.
  */
+
 public class Graph {
+
 
     /**
      * Kumpulan seluruh simpul dalam graf

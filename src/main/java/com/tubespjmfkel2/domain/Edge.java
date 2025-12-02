@@ -1,4 +1,4 @@
-package com.tubespjmfkel2.model.entity;
+package com.tubespjmfkel2.domain;
 
 /**
  * Kelas Edge merepresentasikan sebuah sisi (link) dalam graf berarah.

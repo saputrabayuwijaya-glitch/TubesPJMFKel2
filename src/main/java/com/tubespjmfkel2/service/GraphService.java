@@ -1,11 +1,11 @@
-package com.tubespjmfkel2.controller;
+package com.tubespjmfkel2.service;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import com.mxgraph.view.mxGraph;
-import com.tubespjmfkel2.model.entity.Graph;
-import com.tubespjmfkel2.model.entity.Vertex;
+import com.tubespjmfkel2.domain.Graph;
+import com.tubespjmfkel2.domain.Vertex;
 
 /**
  * Controller yang bertanggung jawab mengelola struktur graph,
@@ -27,7 +27,7 @@ import com.tubespjmfkel2.model.entity.Vertex;
  * serta representasi grafis pada GUI untuk tampilan visual.
  * </p>
  */
-public class GraphController {
+public class GraphService {
 
     /**
      * Object graph visual dari mxGraph untuk ditampilkan ke UI.
