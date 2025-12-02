@@ -15,7 +15,6 @@ import com.mxgraph.view.mxGraph;
 import org.apache.commons.csv.CSVFormat;
 import com.mxgraph.layout.mxFastOrganicLayout;
 
-
 /**
  * Kelas utama antarmuka grafis (GUI) aplikasi pencarian rute terpendek
  * menggunakan algoritma Dijkstra.
@@ -74,7 +73,7 @@ public class GUI extends JFrame {
         headerPanel.add(btnImportCSV);
 
         setLayout(new BorderLayout());
-        add(headerPanel, BorderLayout.NORTH);
+        add(headerPanel, BorderLayout.SOUTH);
         add(graphComponent, BorderLayout.CENTER);
 
         graphComponent.setConnectable(false);
@@ -215,7 +214,8 @@ public class GUI extends JFrame {
     public static void highlightPath(mxGraph graph, GraphController graphController, List<String> path) {
         graph.getModel().beginUpdate();
         try {
-            graphController.getUiEdgeMap().forEach((k, e) -> graph.setCellStyle("strokeColor=red;strokeWidth=1;endArrow=none;", new Object[]{e}));
+            graphController.getUiEdgeMap().forEach(
+                    (k, e) -> graph.setCellStyle("strokeColor=red;strokeWidth=1;endArrow=none;", new Object[] { e }));
 
             for (int i = 0; i < path.size() - 1; i++) {
                 colorEdge(graph, graphController, path.get(i), path.get(i + 1));
@@ -236,10 +236,10 @@ public class GUI extends JFrame {
      * @param vertexDestination Nama vertex tujuan.
      */
     private static void colorEdge(mxGraph graph, GraphController graphController, String vertexSource,
-                                  String vertexDestination) {
+            String vertexDestination) {
         Object edge = graphController.getUiEdgeMap().get(vertexSource + "->" + vertexDestination);
         if (edge != null) {
-            graph.setCellStyle("strokeColor=green;strokeWidth=3;endArrow=none;", new Object[]{edge});
+            graph.setCellStyle("strokeColor=green;strokeWidth=3;endArrow=none;", new Object[] { edge });
         }
     }
 
