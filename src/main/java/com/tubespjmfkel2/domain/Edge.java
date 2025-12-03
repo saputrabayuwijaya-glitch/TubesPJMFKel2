@@ -34,4 +34,8 @@ public class Edge {
         return weight;
     }
 
+    public Vertex getOpposite(Vertex currentVertex) {
+        return currentVertex.equals(source) ? destination : source;
+    }
+
 }

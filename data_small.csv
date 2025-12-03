@@ -1,0 +1,17 @@
+TYPE,SOURCE,DESTINATION,WEIGHT
+V,Rumah,,
+V,Sekolah,,
+V,Kampus,,
+V,Pasar,,
+V,Toko,,
+V,Supermarket,,
+V,Taman,,
+E,Rumah,Sekolah,4
+E,Rumah,Kampus,3
+E,Sekolah,Pasar,5
+E,Sekolah,Toko,12
+E,Kampus,Toko,10
+E,Kampus,Taman,7
+E,Taman,Toko,2
+E,Pasar,Supermarket,16
+E,Toko,Supermarket,10

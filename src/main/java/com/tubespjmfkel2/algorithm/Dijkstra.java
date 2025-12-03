@@ -58,10 +58,7 @@ public class Dijkstra {
             for (Edge edge : currentVertex.getNeighbors()) {
 
                 // Tentukan neighbor (neighbor vertex), karena edge disimpan 2 arah
-                Vertex neighbor = edge.getSource().equals(currentVertex)
-                        ? edge.getDestination() // Jika current = source, maka neighbor = destination
-                        : edge.getSource(); // Jika current = destination, maka neighbor = source
-
+                Vertex neighbor = edge.getOpposite(currentVertex);
                 // Ambil bobot jarak dari edge tersebut
                 int weight = edge.getWeight();
 
@@ -79,8 +76,6 @@ public class Dijkstra {
             // Tandai currentVertex sebagai settled (jaraknya sudah final)
             settledVertices.add(currentVertex);
         }
-
-
     }
 
 
@@ -142,5 +137,4 @@ public class Dijkstra {
             evaluationVertex.setShortestPath(shortestPath);
         }
     }
-
 }
