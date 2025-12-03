@@ -1,13 +1,11 @@
 package com.tubespjmfkel2;
 
-import javax.swing.SwingUtilities;
 
-import com.tubespjmfkel2.view.GUI;
+import com.tubespjmfkel2.view.WelcomeFrame;
 
 public class Main {
 
     public static void main(String[] args) {
-        // Menjalankan GUI pada Event Dispatch Thread
-        SwingUtilities.invokeLater(GUI::new);
+        new WelcomeFrame();
     }
 }

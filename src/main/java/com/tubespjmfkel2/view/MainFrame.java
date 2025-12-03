@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxRectangle;
@@ -25,7 +24,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
-public class GUI extends JFrame {
+public class MainFrame extends JFrame {
 
     private GraphService graphService = new GraphService();
 
@@ -40,46 +39,41 @@ public class GUI extends JFrame {
     private mxGraphComponent graphComponent = new mxGraphComponent(uiGraph);
 
 
-    public GUI() {
+    public MainFrame() {
 
         super("Pencarian Rute Terpendek Menuju Bengkel");
 
         JButton btnAddVertex = new JButton("Tambah Titik Tempat");
         JButton btnAddEdge = new JButton("Tambah Jarak");
         JButton btnFindPath = new JButton("Cari Rute Terpendek");
-        JButton btnReset = new JButton("Reset Semua");
-        JButton btnImportCSV = new JButton("Import CSV");
+        JButton btnResetGraph = new JButton("Reset Semua");
 
         btnAddVertex.addActionListener(e -> addVertex());
         btnAddEdge.addActionListener(e -> addEdge());
-        btnImportCSV.addActionListener(e -> importCSV());
         btnFindPath.addActionListener(e -> findPath());
-        btnReset.addActionListener(e -> resetAll());
+        btnResetGraph.addActionListener(e -> resetGraph());
 
         JPanel headerPanel = new JPanel();
         headerPanel.add(btnAddVertex);
         headerPanel.add(btnAddEdge);
         headerPanel.add(btnFindPath);
-        headerPanel.add(btnReset);
-        headerPanel.add(btnImportCSV);
+        headerPanel.add(btnResetGraph);
+
 
         setLayout(new BorderLayout());
         add(headerPanel, BorderLayout.NORTH);
         add(graphComponent, BorderLayout.CENTER);
 
         graphComponent.setConnectable(false);
-        setSize(900, 600);
+        setSize(getMaximumSize());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
     }
 
 
-    private void importCSV() {
-        var pathCsv = JOptionPane.showInputDialog("Masukkan path CSV:");
-        if (pathCsv == null || pathCsv.isBlank()) return;
-
-        try (var reader = new java.io.FileReader(pathCsv)) {
+    public boolean importCSV(String path) {
+        try (var reader = new java.io.FileReader(path)) {
 
             var csv = CSVFormat.DEFAULT.builder()
                     .setHeader("type", "source", "destination", "weight")
@@ -90,7 +84,6 @@ public class GUI extends JFrame {
             int v = 0, e = 0;
 
             for (var row : csv) {
-
                 String type = row.get("type");
                 String source = row.get("source");
                 String destination = row.get("destination");
@@ -116,10 +109,13 @@ public class GUI extends JFrame {
             refreshGraph();
             JOptionPane.showMessageDialog(null, "✔ Vertex: " + v + "\n✔ Edge: " + e);
 
+            return true;
+
         } catch (Exception error) {
-            JOptionPane.showMessageDialog(null, "Import gagal: " + error.getMessage());
+            return false;
         }
     }
+
 
     private void addVertex() {
         String vertexName = JOptionPane.showInputDialog("Nama Titik Tempat:");
@@ -131,9 +127,6 @@ public class GUI extends JFrame {
         }
 
         addVertexUI(vertexName);
-//        mxgraph
-
-
         refreshGraph();
     }
 
@@ -162,7 +155,6 @@ public class GUI extends JFrame {
         String destination = JOptionPane.showInputDialog("Menuju Titik Tempat:");
         String weight = JOptionPane.showInputDialog("Jarak (km):");
 
-        Integer weightInt = Integer.parseInt(weight);
 
         String error = graphService.addEdge(source, destination, Integer.parseInt(weight));
 
@@ -261,7 +253,7 @@ public class GUI extends JFrame {
     }
 
 
-    private void resetAll() {
+    private void resetGraph() {
         graphService.reset();
         uiVertexMap.clear();
         uiEdgeMap.clear();
