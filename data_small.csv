@@ -4,7 +4,7 @@ V,Sekolah,,
 V,Kampus,,
 V,Pasar,,
 V,Toko,,
-V,Supermarket,,
+V,Bengkel,,
 V,Taman,,
 E,Rumah,Sekolah,4
 E,Rumah,Kampus,3
@@ -13,5 +13,5 @@ E,Sekolah,Toko,12
 E,Kampus,Toko,10
 E,Kampus,Taman,7
 E,Taman,Toko,2
-E,Pasar,Supermarket,16
-E,Toko,Supermarket,10
+E,Pasar,Bengkel,16
+E,Toko,Bengkel,10

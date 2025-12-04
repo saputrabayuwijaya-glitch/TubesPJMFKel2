@@ -17,6 +17,17 @@ import com.tubespjmfkel2.dto.DijkstraResult;
 
 import org.apache.commons.csv.CSVFormat;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.io.File;
+
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -38,39 +49,79 @@ public class MainFrame extends JFrame {
 
     private mxGraphComponent graphComponent = new mxGraphComponent(uiGraph);
 
+    private Image loadImage(String path) {
+        try {
+            return ImageIO.read(new File(path));
+        } catch (Exception e) {
+            System.out.println("Gagal load image: " + e.getMessage());
+            return null;
+        }
+    }
 
     public MainFrame() {
 
         super("Pencarian Rute Terpendek Menuju Bengkel");
 
-        JButton btnAddVertex = new JButton("Tambah Titik Tempat");
-        JButton btnAddEdge = new JButton("Tambah Jarak");
-        JButton btnFindPath = new JButton("Cari Rute Terpendek");
-        JButton btnResetGraph = new JButton("Reset Semua");
+        JButton btnAddVertex = new JButton("➕ Tambah Titik Tempat");
+        JButton btnAddEdge = new JButton("➕ Tambah Jarak");
+        JButton btnFindPath = new JButton("🔎 Cari Rute Terpendek");
+        JButton btnResetGraph = new JButton("➖ Reset Semua");
 
         btnAddVertex.addActionListener(e -> addVertex());
         btnAddEdge.addActionListener(e -> addEdge());
         btnFindPath.addActionListener(e -> findPath());
         btnResetGraph.addActionListener(e -> resetGraph());
 
-        JPanel headerPanel = new JPanel();
-        headerPanel.add(btnAddVertex);
-        headerPanel.add(btnAddEdge);
-        headerPanel.add(btnFindPath);
-        headerPanel.add(btnResetGraph);
+        // =============================
+        // PANEL TOMBOL (DIPERBAIKI POSISI)
+        // =============================
+        JPanel headerPanel = new JPanel(new BorderLayout());
 
+        JPanel leftPanel = new JPanel();
+        leftPanel.add(btnAddVertex);
+        leftPanel.add(btnAddEdge);
 
-        setLayout(new BorderLayout());
-        add(headerPanel, BorderLayout.NORTH);
-        add(graphComponent, BorderLayout.CENTER);
+        JPanel centerPanel = new JPanel();
+        centerPanel.add(btnFindPath);
 
-        graphComponent.setConnectable(false);
+        JPanel rightPanel = new JPanel();
+        rightPanel.add(btnResetGraph);
+
+        headerPanel.add(leftPanel, BorderLayout.WEST);
+        headerPanel.add(centerPanel, BorderLayout.CENTER);
+        headerPanel.add(rightPanel, BorderLayout.EAST);
+
+        // =============================
+        // BACKGROUND IMAGE
+        // =============================
+        Image bgImage = loadImage(
+                "C:/Users/Saputra Bayu Wijaya/Downloads/tubes2/TubesPJMFKel2/src/main/java/com/tubespjmfkel2/view/asset/gambar.png");
+
+        JPanel backgroundPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (bgImage != null) {
+                    g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this);
+                }
+            }
+        };
+        backgroundPanel.setLayout(new BorderLayout());
+
+        backgroundPanel.add(headerPanel, BorderLayout.NORTH);
+        backgroundPanel.add(graphComponent, BorderLayout.CENTER);
+
+        graphComponent.setOpaque(false);
+        graphComponent.getViewport().setOpaque(false);
+        graphComponent.getGraphControl().setOpaque(false);
+
+        setContentPane(backgroundPanel);
+
         setSize(getMaximumSize());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
     }
-
 
     public boolean importCSV(String path) {
         try (var reader = new java.io.FileReader(path)) {
@@ -116,7 +167,6 @@ public class MainFrame extends JFrame {
         }
     }
 
-
     private void addVertex() {
         String vertexName = JOptionPane.showInputDialog("Nama Titik Tempat:");
         String error = graphService.addVertex(vertexName);
@@ -138,23 +188,19 @@ public class MainFrame extends JFrame {
                     null,
                     vertexName,
                     100, 100,
-                    60, 60,
-                    "shape=ellipse"
-            );
+                    100, 100,
+                    "shape=ellipse;strokeWidth=3;fontSize=20;strokeColor=white;strokeColorValue=3;fontColor=black");
             uiVertexMap.put(vertexName, uiVertex);
         } finally {
             uiGraph.getModel().endUpdate();
         }
 
-
     }
-
 
     private void addEdge() {
         String source = JOptionPane.showInputDialog("Dari Titik Tempat:");
         String destination = JOptionPane.showInputDialog("Menuju Titik Tempat:");
         String weight = JOptionPane.showInputDialog("Jarak (km):");
-
 
         String error = graphService.addEdge(source, destination, Integer.parseInt(weight));
 
@@ -163,11 +209,9 @@ public class MainFrame extends JFrame {
             return;
         }
 
-
         addEdgeUI(source, destination, Integer.parseInt(weight));
         refreshGraph();
     }
-
 
     private void addEdgeUI(String source, String destination, int weight) {
 
@@ -182,8 +226,7 @@ public class MainFrame extends JFrame {
                     weight,
                     vertexSource,
                     vertexDestination,
-                    "endArrow=none;strokeColor=black;rounded=true;"
-            );
+                    "endArrow=none;strokeColor=white;rounded=true;strokeWidth=3;fontColor=yellow;fontSize=20");
 
             uiEdgeMap.put(source + "->" + destination, edge);
             uiEdgeMap.put(destination + "->" + source, edge);
@@ -192,7 +235,6 @@ public class MainFrame extends JFrame {
             uiGraph.getModel().endUpdate();
         }
     }
-
 
     private void findPath() {
         String start = JOptionPane.showInputDialog("Dari Titik:");
@@ -217,7 +259,8 @@ public class MainFrame extends JFrame {
         List<String> path = result.getPath();
         for (int i = 0; i < path.size(); i++) {
             sb.append(path.get(i));
-            if (i < path.size() - 1) sb.append(" → ");
+            if (i < path.size() - 1)
+                sb.append(" → ");
         }
 
         JOptionPane.showMessageDialog(null, sb.toString());
@@ -228,9 +271,8 @@ public class MainFrame extends JFrame {
         uiGraph.getModel().beginUpdate();
         try {
             uiEdgeMap.forEach((k, e) -> uiGraph.setCellStyle(
-                    "strokeColor=red;strokeWidth=1;endArrow=none;rounded=true;",
-                    new Object[]{e}
-            ));
+                    "strokeColor=red;strokeWidth=3;endArrow=none;rounded=true;fontColor=white;fontSize=20",
+                    new Object[] { e }));
 
             for (int i = 0; i < path.size() - 1; i++) {
                 colorEdge(path.get(i), path.get(i + 1));
@@ -241,17 +283,14 @@ public class MainFrame extends JFrame {
         }
     }
 
-
     private void colorEdge(String source, String destination) {
         Object edge = uiEdgeMap.get(source + "->" + destination);
         if (edge != null) {
             uiGraph.setCellStyle(
-                    "strokeColor=green;strokeWidth=3;endArrow=none;rounded=true;",
-                    new Object[]{edge}
-            );
+                    "strokeColor=green;strokeWidth=5;endArrow=none;rounded=true;fontColor=white;fontSize=20",
+                    new Object[] { edge });
         }
     }
-
 
     private void resetGraph() {
         graphService.reset();
@@ -283,10 +322,12 @@ public class MainFrame extends JFrame {
     public void autoCenterGraph(mxGraph uiGraph, mxGraphComponent graphComponent) {
         SwingUtilities.invokeLater(() -> {
             Dimension size = graphComponent.getSize();
-            if (size.width == 0 || size.height == 0) return;
+            if (size.width == 0 || size.height == 0)
+                return;
 
             mxRectangle bounds = uiGraph.getGraphBounds();
-            if (bounds == null) return;
+            if (bounds == null)
+                return;
 
             double dx = (size.getWidth() - bounds.getWidth()) / 2 - bounds.getX();
             double dy = (size.getHeight() - bounds.getHeight()) / 2 - bounds.getY();
